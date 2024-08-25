@@ -1,10 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cors = require('cors'); // Import cors
 
 const app = express();
+
+// Use CORS and allow requests from your frontend
+app.use(cors({
+  origin: 'http://localhost:5173', // Allow only this origin
+  methods: ['GET', 'POST'], // Allow specific methods
+  allowedHeaders: ['Content-Type'], // Allow specific headers
+}));
+
 app.use(bodyParser.json());
-app.use(cors());
+
 app.get('/bfhl', (req, res) => {
     res.status(200).json({
         "operation_code": 1
@@ -13,7 +21,7 @@ app.get('/bfhl', (req, res) => {
 
 app.post('/bfhl', (req, res) => {
     const data = req.body.data || [];
-    
+
     const numbers = data.filter(item => !isNaN(item));
     const alphabets = data.filter(item => isNaN(item));
     const lowercaseAlphabets = alphabets.filter(item => item === item.toLowerCase());
