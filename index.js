@@ -1,14 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
 
 const app = express();
 
-// Use CORS and allow requests from your frontend
+// Allow requests from specific origins, including localhost and Vercel
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  'https://bhfl-challenge-frontend.vercel.app'
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Allow only this origin
-  methods: ['GET', 'POST'], // Allow specific methods
-  allowedHeaders: ['Content-Type'], // Allow specific headers
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
 
 app.use(bodyParser.json());
